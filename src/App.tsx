@@ -23,6 +23,7 @@ import {
 import { CostCalculator } from './components/CostCalculator';
 import { PortfolioModal } from './components/PortfolioModal';
 import { ContactOrderForm } from './components/ContactOrderForm';
+import { BrandLogo } from './components/BrandLogo';
 import { HomePage, AppPage } from './pages/HomePage';
 import { ServicesPage } from './pages/ServicesPage';
 import { PortfolioPage } from './pages/PortfolioPage';
@@ -131,15 +132,16 @@ export default function App() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
-          {/* Zone 1: Single Text Element Wordmark */}
+          {/* Zone 1: Brand Lockup with Official KF Emblem */}
           <button
             type="button"
             onClick={() => navigateToPage('home')}
-            className={`text-lg font-bold tracking-tight whitespace-nowrap shrink-0 cursor-pointer ${
+            className={`inline-flex items-center gap-3 text-lg font-bold tracking-tight whitespace-nowrap shrink-0 cursor-pointer ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}
           >
-            Kuadjo Fila Studio
+            <BrandLogo size="sm" />
+            <span>Kuadjo Fila Studio</span>
           </button>
 
           {/* Zone 2: 5 Concise Single-Line Multi-Page Navigation Links */}
@@ -439,16 +441,21 @@ export default function App() {
 
           {/* Regional Hubs & Multi-Page Directory */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-slate-800/80 text-xs">
-            <div className="md:col-span-4 space-y-2">
-              <div className="text-base font-bold text-white">
-                Kuadjo Fila Studio
+            <div className="md:col-span-4 space-y-3">
+              <div className="flex items-center gap-3.5">
+                <BrandLogo size="lg" showWordmarkInside />
+                <div>
+                  <div className="text-base font-bold text-white">
+                    Kuadjo Fila Studio
+                  </div>
+                  <div className="text-amber-400 font-medium text-xs mt-0.5">
+                    Unique · Clean · Professional · Affordable
+                  </div>
+                </div>
               </div>
               <p className="text-slate-400 max-w-sm leading-relaxed">
                 For a quality and affordable graphic design & executive documentation: Stickers, Banners, Posters, Flyers, Call & Business Cards, Letterheads, Certificates, T-Shirts/Souvenirs, Logo Design, Invitations, Music Cover Arts, MS Word & Excel Databases.
               </p>
-              <div className="pt-2 text-amber-400 font-medium">
-                Unique · Clean · Professional · Affordable
-              </div>
             </div>
 
             {/* Multi-Page Links Column */}

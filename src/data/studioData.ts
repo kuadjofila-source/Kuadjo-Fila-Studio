@@ -1,3 +1,12 @@
+import heroCreativeStudioWorkspace from '../assets/images/hero_creative_studio_workspace_1791644409147.jpg';
+import portfolioBrandIdentityMockup from '../assets/images/portfolio_brand_identity_mockup_1791644422423.jpg';
+import portfolioCertificatesInvitationsSuite from '../assets/images/portfolio_certificates_invitations_suite_1791645704505.jpg';
+import portfolioEventFlyerShowcase from '../assets/images/portfolio_event_flyer_showcase_1791644434135.jpg';
+import portfolioExcelDashboardDeck from '../assets/images/portfolio_excel_dashboard_deck_1791644459156.jpg';
+import portfolioMusicCoverartBanners from '../assets/images/portfolio_music_coverart_banners_1791645717777.jpg';
+import portfolioTshirtSouvenirsMockup from '../assets/images/portfolio_tshirt_souvenirs_mockup_1791645690267.jpg';
+import portfolioWordThesisReport from '../assets/images/portfolio_word_thesis_report_1791644447277.jpg';
+
 export type PortfolioCategory =
   | 'All'
   | 'Visual Graphics'
@@ -49,7 +58,7 @@ export const CONTACT_INFO = {
   brandPromise: 'Unique · Clean · Professional · Affordable',
 };
 
-export const HERO_IMAGE = '/src/assets/images/hero_creative_studio_workspace_1791644409147.jpg';
+export const HERO_IMAGE = heroCreativeStudioWorkspace;
 
 export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
@@ -70,7 +79,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       '28-Page Brand Guidelines & Color System Book',
       'Social Media Executive Profile Kit'
     ],
-    imageUrl: '/src/assets/images/portfolio_brand_identity_mockup_1791644422423.jpg',
+    imageUrl: portfolioBrandIdentityMockup,
     featured: true,
     interactivePreviewType: 'brand'
   },
@@ -92,7 +101,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       'Branded Ceramic Mug & Souvenir Packaging Mockups',
       'Woven Lanyard & Attendee Call-Card / Badge Templates'
     ],
-    imageUrl: '/src/assets/images/portfolio_tshirt_souvenirs_mockup_1791645690267.jpg',
+    imageUrl: portfolioTshirtSouvenirsMockup,
     featured: true,
     interactivePreviewType: 'brand'
   },
@@ -114,7 +123,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       '32 Re-typeset Empirical Regression & Financial Tables',
       'Print-Ready PDF/A & Editable DOCX Master Template'
     ],
-    imageUrl: '/src/assets/images/portfolio_word_thesis_report_1791644447277.jpg',
+    imageUrl: portfolioWordThesisReport,
     featured: true,
     interactivePreviewType: 'document'
   },
@@ -136,7 +145,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       '24-Slide Widescreen 16:9 Investor Pitch Deck (PPTX)',
       'One-Click Executive PDF Print Macro Layout'
     ],
-    imageUrl: '/src/assets/images/portfolio_excel_dashboard_deck_1791644459156.jpg',
+    imageUrl: portfolioExcelDashboardDeck,
     interactivePreviewType: 'dashboard'
   },
   {
@@ -157,7 +166,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       'Automated Variable-Data Guest Name Personalization',
       'Presentation Folder & Wax Seal Monogram Vector Die'
     ],
-    imageUrl: '/src/assets/images/portfolio_certificates_invitations_suite_1791645704505.jpg',
+    imageUrl: portfolioCertificatesInvitationsSuite,
     interactivePreviewType: 'flyer'
   },
   {
@@ -178,7 +187,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       'Die-Cut Promotional Merch Sticker Sheet',
       'Animated Social Media Release Teaser Layout'
     ],
-    imageUrl: '/src/assets/images/portfolio_music_coverart_banners_1791645717777.jpg',
+    imageUrl: portfolioMusicCoverartBanners,
     interactivePreviewType: 'flyer'
   },
   {
@@ -199,7 +208,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       'Speaker Spotlight Social Media Carousel Templates',
       'Event Lanyard & Stage Backdrop Vector Artwork'
     ],
-    imageUrl: '/src/assets/images/portfolio_event_flyer_showcase_1791644434135.jpg',
+    imageUrl: portfolioEventFlyerShowcase,
     interactivePreviewType: 'flyer'
   },
   {
@@ -220,7 +229,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       'Integrated Bill of Quantities (BoQ) & Schedule Tables',
       'Editable Style Guide for Internal Team Updates'
     ],
-    imageUrl: '/src/assets/images/portfolio_word_thesis_report_1791644447277.jpg',
+    imageUrl: portfolioWordThesisReport,
     interactivePreviewType: 'document'
   },
   {
@@ -241,7 +250,7 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
       'Custom Vector System Architecture Diagrams',
       'Dark & Light Mode Printable Handout Deck'
     ],
-    imageUrl: '/src/assets/images/portfolio_excel_dashboard_deck_1791644459156.jpg',
+    imageUrl: portfolioExcelDashboardDeck,
     interactivePreviewType: 'dashboard'
   }
 ];

@@ -10,6 +10,7 @@ import {
   Send
 } from 'lucide-react';
 import { CONTACT_INFO } from '../data/studioData';
+import { BrandLogo } from './BrandLogo';
 
 interface ContactOrderFormProps {
   prefillData: {
@@ -122,6 +123,9 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
             className="lg:col-span-5 space-y-8"
           >
             <div>
+              <div className="mb-4">
+                <BrandLogo size="lg" showWordmarkInside />
+              </div>
               <p className="text-xs font-semibold tracking-wider text-amber-500 mb-2">
                 05. Direct Client Intake & Studio Desk
               </p>

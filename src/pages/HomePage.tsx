@@ -15,6 +15,7 @@ import {
   PortfolioItem,
   ServiceOption
 } from '../data/studioData';
+import { BrandLogo } from '../components/BrandLogo';
 
 export type AppPage = 'home' | 'services' | 'portfolio' | 'calculator' | 'contact';
 
@@ -191,8 +192,16 @@ export const HomePage: React.FC<HomePageProps> = ({
 
                 {/* Measured Contrast Scrim for Legibility */}
                 <div className="relative z-10 bg-gradient-to-t from-slate-950/95 via-slate-950/65 to-transparent p-6 pt-20">
-                  <div className="text-xs font-mono-tabular text-amber-400 mb-1">
-                    KUADJO FILA STUDIO · UNIQUE · CLEAN · PROFESSIONAL
+                  <div className="flex items-center gap-3 mb-2.5">
+                    <BrandLogo size="md" showWordmarkInside />
+                    <div>
+                      <div className="text-xs font-mono-tabular text-amber-400">
+                        KUADJO FILA STUDIO
+                      </div>
+                      <div className="text-xs text-slate-300">
+                        Unique · Clean · Professional · Affordable
+                      </div>
+                    </div>
                   </div>
                   <p className="text-sm font-semibold text-white">
                     Brand Logos, Flyers, T-Shirts & Souvenirs · MS Word Theses · Automated Excel Databases
