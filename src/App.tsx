@@ -13,7 +13,8 @@ import {
   Phone,
   Mail,
   Menu,
-  X
+  X,
+  Shield
 } from 'lucide-react';
 import {
   CONTACT_INFO,
@@ -24,9 +25,10 @@ import { CostCalculator } from './components/CostCalculator';
 import { PortfolioModal } from './components/PortfolioModal';
 import { ContactOrderForm } from './components/ContactOrderForm';
 import { BrandLogo } from './components/BrandLogo';
-import { HomePage, AppPage } from './pages/HomePage';
+import { HomePage, AppPage, DirectOrderSelection } from './pages/HomePage';
 import { ServicesPage } from './pages/ServicesPage';
 import { PortfolioPage } from './pages/PortfolioPage';
+import { AdminDashboardPage } from './pages/AdminDashboardPage';
 
 const NAV_ITEMS: { id: AppPage; label: string }[] = [
   { id: 'home', label: 'Home' },
@@ -37,7 +39,15 @@ const NAV_ITEMS: { id: AppPage; label: string }[] = [
 ];
 
 export default function App() {
-  const [activePage, setActivePage] = useState<AppPage>('home');
+  const [activePage, setActivePage] = useState<AppPage>(() => {
+    const rawPath = window.location.pathname.replace('/', '').toLowerCase();
+    if (rawPath === 'admin' || rawPath === 'admin.html') return 'admin';
+    const rawHash = window.location.hash.replace('#', '').toLowerCase() as AppPage;
+    if (['home', 'services', 'portfolio', 'calculator', 'contact', 'admin'].includes(rawHash)) {
+      return rawHash;
+    }
+    return 'home';
+  });
   const [isDark, setIsDark] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [selectedPortfolioItem, setSelectedPortfolioItem] =
@@ -49,6 +59,8 @@ export default function App() {
     urgencyLabel: string;
     estimatedRange: string;
     notes: string;
+    packageTitle?: string;
+    deliverables?: string[];
   } | null>(null);
   const [heroImgError, setHeroImgError] = useState<boolean>(false);
   const [brokenPortfolioImgs, setBrokenPortfolioImgs] = useState<
@@ -58,16 +70,35 @@ export default function App() {
   // Sync URL hash for multi-page browser history support
   useEffect(() => {
     const handleHashChange = () => {
-      const rawHash = window.location.hash.replace('#', '') as AppPage;
-      if (['home', 'services', 'portfolio', 'calculator', 'contact'].includes(rawHash)) {
+      const rawHash = window.location.hash.replace('#', '').toLowerCase() as AppPage;
+      if (['home', 'services', 'portfolio', 'calculator', 'contact', 'admin'].includes(rawHash)) {
         setActivePage(rawHash);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
-    handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  // Automatically track visitor IP & route on page load (excluding /admin routes)
+  useEffect(() => {
+    if (activePage === 'admin') return;
+
+    const controller = new AbortController();
+    fetch('/api/track-visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        route: `/${activePage}`,
+        referrer: document.referrer || 'Direct / Studio Navigation',
+      }),
+      signal: controller.signal,
+    }).catch(() => {
+      // Silent fallback if offline
+    });
+
+    return () => controller.abort();
+  }, [activePage]);
 
   const navigateToPage = (page: AppPage) => {
     setMobileMenuOpen(false);
@@ -79,6 +110,19 @@ export default function App() {
   const handleSelectServiceForCalculator = (serviceId: ServiceOption['id']) => {
     setCalculatorServiceId(serviceId);
     navigateToPage('calculator');
+  };
+
+  // Direct order handler from Home Page & Services Page -> Contact Page with deliverables pre-loaded
+  const handleDirectOrderToContact = (selection: DirectOrderSelection) => {
+    setPrefillContactData({
+      serviceName: selection.serviceName,
+      urgencyLabel: selection.turnaroundLabel,
+      estimatedRange: 'Custom Project Order',
+      packageTitle: selection.packageTitle,
+      deliverables: selection.deliverables,
+      notes: `I would like to place an order for: ${selection.packageTitle}.\nExpected Deliverables: ${selection.deliverables.join('; ')}.\nPlease let me know the next steps to begin.`,
+    });
+    navigateToPage('contact');
   };
 
   const handlePortfolioModalToQuote = (
@@ -175,10 +219,10 @@ export default function App() {
           <div className="flex items-center gap-3 shrink-0">
             <button
               type="button"
-              onClick={() => navigateToPage('calculator')}
+              onClick={() => navigateToPage('contact')}
               className="px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
-              Get Instant Quote
+              Place an Order
             </button>
 
             <button
@@ -229,6 +273,18 @@ export default function App() {
                     {item.label}
                   </button>
                 ))}
+                <button
+                  type="button"
+                  onClick={() => navigateToPage('admin')}
+                  className={`text-left py-2 px-2 rounded-lg transition-colors flex items-center gap-2 ${
+                    activePage === 'admin'
+                      ? 'text-amber-500 font-bold bg-amber-500/10'
+                      : 'text-slate-400 hover:text-amber-500'
+                  }`}
+                >
+                  <Shield className="w-4 h-4 text-amber-500" />
+                  <span>Admin Analytics</span>
+                </button>
               </div>
             </motion.div>
           )}
@@ -258,11 +314,15 @@ export default function App() {
             </button>
             <span aria-hidden="true">/</span>
             <span className="font-semibold text-amber-500 capitalize">
-              {activePage === 'calculator' ? 'Cost Calculator' : activePage}
+              {activePage === 'calculator'
+                ? 'Scope Configurator'
+                : activePage === 'admin'
+                ? 'Admin Visitor Dashboard'
+                : activePage}
             </span>
             <span aria-hidden="true">·</span>
             <span className="hidden sm:inline">
-              Accra, Kasoa, Jei-Krodua & Remote Worldwide
+              Accra (New Bortianor & Tudu), Kasoa, Jei-Krodua & Remote Worldwide
             </span>
           </div>
 
@@ -319,6 +379,7 @@ export default function App() {
                 isDark={isDark}
                 onNavigate={navigateToPage}
                 onSelectServiceForQuote={handleSelectServiceForCalculator}
+                onDirectOrderToContact={handleDirectOrderToContact}
                 onOpenPortfolioModal={setSelectedPortfolioItem}
                 heroImgError={heroImgError}
                 setHeroImgError={setHeroImgError}
@@ -339,6 +400,7 @@ export default function App() {
               <ServicesPage
                 isDark={isDark}
                 onSelectServiceForQuote={handleSelectServiceForCalculator}
+                onDirectOrderToContact={handleDirectOrderToContact}
                 onNavigate={navigateToPage}
               />
             </motion.div>
@@ -393,6 +455,21 @@ export default function App() {
               />
             </motion.div>
           )}
+
+          {activePage === 'admin' && (
+            <motion.div
+              key="page-admin"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.22 }}
+            >
+              <AdminDashboardPage
+                isDark={isDark}
+                onNavigate={navigateToPage}
+              />
+            </motion.div>
+          )}
         </AnimatePresence>
       </main>
 
@@ -409,7 +486,7 @@ export default function App() {
           <div className="pb-12 mb-12 border-b border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="max-w-2xl">
               <p className="text-xs font-mono-tabular text-amber-400 mb-2">
-                READY FOR IMMEDIATE DISPATCH IN ACCRA, KASOA, JEI-KRODUA & WORLDWIDE
+                READY FOR IMMEDIATE DISPATCH IN ACCRA (NEW BORTIANOR & TUDU), KASOA, JEI-KRODUA & WORLDWIDE
               </p>
               <h2
                 className="text-2xl sm:text-3xl font-bold text-white tracking-tight"
@@ -477,6 +554,20 @@ export default function App() {
                     </button>
                   </li>
                 ))}
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => navigateToPage('admin')}
+                    className={`hover:text-amber-400 transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
+                      activePage === 'admin'
+                        ? 'text-amber-400 font-semibold'
+                        : 'text-slate-400'
+                    }`}
+                  >
+                    <Shield className="w-3 h-3 text-amber-500" />
+                    <span>Admin Dashboard</span>
+                  </button>
+                </li>
               </ul>
             </div>
 
@@ -532,7 +623,7 @@ export default function App() {
               © {new Date().getFullYear()} Kuadjo Fila Studio. All rights reserved.
             </div>
             <div className="flex items-center gap-2">
-              <span>Accra</span>
+              <span>Accra (New Bortianor & Tudu)</span>
               <span aria-hidden="true">·</span>
               <span>Kasoa</span>
               <span aria-hidden="true">·</span>

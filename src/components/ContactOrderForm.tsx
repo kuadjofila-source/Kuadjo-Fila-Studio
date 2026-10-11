@@ -7,7 +7,9 @@ import {
   MessageSquare,
   CheckCircle2,
   AlertCircle,
-  Send
+  Send,
+  PackageCheck,
+  Check
 } from 'lucide-react';
 import { CONTACT_INFO } from '../data/studioData';
 import { BrandLogo } from './BrandLogo';
@@ -18,6 +20,8 @@ interface ContactOrderFormProps {
     urgencyLabel: string;
     estimatedRange: string;
     notes: string;
+    packageTitle?: string;
+    deliverables?: string[];
   } | null;
   isDark: boolean;
 }
@@ -38,6 +42,45 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
     null
   );
 
+  // Default deliverables map so clients always see what they are getting their hands on
+  const defaultDeliverablesByService: Record<string, string[]> = {
+    'Graphic Designing': [
+      '300 DPI CMYK Print-Ready Artwork (PDF, PNG)',
+      'Editable Master Source Files (PSD / AI)',
+      'Social Media & WhatsApp Promo Formats + Revisions',
+    ],
+    'Editing & Formatting Document': [
+      'Automated Dynamic Table of Contents & List of Figures/Tables',
+      'Proper Roman & Arabic Page Numbering & Margin Compliance',
+      'Clean Editable MS Word (.DOCX) + Print-Ready PDF/A',
+    ],
+    'Excel Database & Dashboard': [
+      'Automated Formulas (XLOOKUP, SUMIFS) & Data Validation',
+      'Interactive Executive KPI Dashboard & Visual Charts',
+      'Unlocked Master .XLSX / .PPTX File Ready for Immediate Use',
+    ],
+    'Full Branding Package': [
+      'Primary & Secondary Vector Logo Suite (AI, EPS, SVG, PNG)',
+      'Call Cards, Business Cards & Official Company Letterhead',
+      'Brand Color & Typography Guide + 3D Mockup Presentation',
+    ],
+    'T-Shirt, Souvenirs & Merch': [
+      'Print-Ready Vector Graphics for Screen Print, DTF or Embroidery',
+      'Realistic T-Shirt, Mug, Cap & Souvenir Placement Mockups',
+      'High-Resolution Master Files for Production',
+    ],
+    'Certificates & Event Invitations': [
+      'Embossed / Foil-Ready Certificate or Wedding/Gala Invitation Layout',
+      'Print-Ready CMYK PDF with Crop & Bleed Marks',
+      'Digital WhatsApp / Social Sharing Invitation Version',
+    ],
+    'Music Cover Arts & Social Kit': [
+      '3000×3000px Streaming-Compliant Cover Art (Spotify, Apple Music, Boomplay)',
+      'Animated / Social Countdown & Release Promo Graphics',
+      'High-Resolution PNG, JPG & Master Source File',
+    ],
+  };
+
   useEffect(() => {
     if (prefillData) {
       setServiceNeeded(prefillData.serviceName);
@@ -45,6 +88,15 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
       setProjectDetails(prefillData.notes);
     }
   }, [prefillData]);
+
+  const activeDeliverables =
+    prefillData?.deliverables && prefillData.deliverables.length > 0
+      ? prefillData.deliverables
+      : defaultDeliverablesByService[serviceNeeded] ||
+        defaultDeliverablesByService['Graphic Designing'];
+
+  const activePackageTitle =
+    prefillData?.packageTitle || `${serviceNeeded} — Studio Deliverable Package`;
 
   const validateFields = () => {
     if (!name.trim()) {
@@ -70,7 +122,9 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
 • Client Name: ${name.trim()}
 • Phone / WhatsApp: ${phone.trim()}
 • Service Needed: ${serviceNeeded}
+• Package Selected: ${activePackageTitle}
 • Turnaround / Scope Tier: ${turnaroundPreference}
+• What I'm Ordering: ${activeDeliverables.join(' + ')}
 • Project Brief: ${projectDetails.trim()}`;
   };
 
@@ -127,20 +181,20 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
                 <BrandLogo size="lg" showWordmarkInside />
               </div>
               <p className="text-xs font-semibold tracking-wider text-amber-500 mb-2">
-                05. Direct Client Intake & Studio Desk
+                05. Direct Client Intake & Studio Order Desk
               </p>
               <h2
                 className="text-2xl sm:text-4xl font-bold tracking-tight"
                 style={{ textWrap: 'balance' }}
               >
-                Get In Touch With Us Now
+                Place Your Order & Get In Touch Now
               </h2>
               <p
                 className={`mt-3 text-base leading-relaxed ${
                   isDark ? 'text-slate-300' : 'text-slate-600'
                 }`}
               >
-                Whether you need stickers, banners, posters, flyers, call & business cards, letterheads, certificates, t-shirts/souvenirs, music cover arts, or complete MS Word & Excel documentation—reach out directly below.
+                Whether you need stickers, banners, posters, flyers, call & business cards, letterheads, certificates, t-shirts/souvenirs, music cover arts, or complete MS Word & Excel documentation—review what you get and submit your order below.
               </p>
             </div>
 
@@ -253,7 +307,7 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
             </div>
           </motion.div>
 
-          {/* Right 7 Cols: High-Converting Client Intake Form */}
+          {/* Right 7 Cols: High-Converting Client Intake Form with "What You Are Getting" Summary */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -275,12 +329,37 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
                     isDark ? 'text-slate-400' : 'text-slate-500'
                   }`}
                 >
-                  Fill in your project details below to launch a pre-formatted WhatsApp chat or email inquiry.
+                  Review what is included in your selected service and send your order directly via WhatsApp or Email.
                 </p>
               </div>
               <span className="text-xs font-mono-tabular text-amber-500 font-semibold">
                 24–48H SLOTS OPEN
               </span>
+            </div>
+
+            {/* "What You Are Getting Your Hands On" Deliverables Preview Box */}
+            <div
+              className={`mb-6 p-4 sm:p-5 rounded-xl border ${
+                isDark
+                  ? 'bg-slate-950/90 border-amber-500/40'
+                  : 'bg-amber-50/70 border-amber-300'
+              }`}
+            >
+              <div className="flex items-center gap-2 text-xs font-mono-tabular font-bold text-amber-500 uppercase mb-1.5">
+                <PackageCheck className="w-4 h-4 shrink-0" />
+                <span>What You Are Getting Your Hands On:</span>
+              </div>
+              <div className="text-sm font-bold mb-2.5">{activePackageTitle}</div>
+              <ul className="space-y-1.5 text-xs">
+                {activeDeliverables.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className={isDark ? 'text-slate-300' : 'text-slate-700'}>
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {errorMessage && (
@@ -478,7 +557,7 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
                   className="py-3.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-colors flex items-center justify-center gap-2.5 whitespace-nowrap shadow-lg shadow-emerald-600/15 cursor-pointer"
                 >
                   <MessageSquare className="w-4 h-4 shrink-0" />
-                  <span>Chat Directly on WhatsApp</span>
+                  <span>Place Order on WhatsApp</span>
                 </motion.button>
 
                 <motion.button
@@ -489,7 +568,7 @@ export const ContactOrderForm: React.FC<ContactOrderFormProps> = ({
                   className="py-3.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-colors flex items-center justify-center gap-2.5 whitespace-nowrap shadow-lg shadow-blue-600/15 cursor-pointer"
                 >
                   <Send className="w-4 h-4 shrink-0" />
-                  <span>Send Email Inquiry</span>
+                  <span>Send Order via Email</span>
                 </motion.button>
               </div>
             </form>

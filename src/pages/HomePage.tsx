@@ -6,7 +6,9 @@ import {
   Layers,
   FileSpreadsheet,
   Eye,
-  Check
+  Check,
+  ShoppingBag,
+  Sparkles
 } from 'lucide-react';
 import {
   CONTACT_INFO,
@@ -17,12 +19,20 @@ import {
 } from '../data/studioData';
 import { BrandLogo } from '../components/BrandLogo';
 
-export type AppPage = 'home' | 'services' | 'portfolio' | 'calculator' | 'contact';
+export type AppPage = 'home' | 'services' | 'portfolio' | 'calculator' | 'contact' | 'admin';
+
+export interface DirectOrderSelection {
+  serviceName: string;
+  packageTitle: string;
+  deliverables: string[];
+  turnaroundLabel: string;
+}
 
 interface HomePageProps {
   isDark: boolean;
   onNavigate: (page: AppPage) => void;
   onSelectServiceForQuote: (serviceId: ServiceOption['id']) => void;
+  onDirectOrderToContact: (selection: DirectOrderSelection) => void;
   onOpenPortfolioModal: (item: PortfolioItem) => void;
   heroImgError: boolean;
   setHeroImgError: (val: boolean) => void;
@@ -34,6 +44,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   isDark,
   onNavigate,
   onSelectServiceForQuote,
+  onDirectOrderToContact,
   onOpenPortfolioModal,
   heroImgError,
   setHeroImgError,
@@ -78,10 +89,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                   isDark ? 'text-slate-300' : 'text-slate-600'
                 }`}
               >
-                High-impact graphic design & expert document formatting that turns heads, boosts credibility, and grows your business in Accra, Kasoa, Jei-Krodua, and beyond.
+                High-impact graphic design & expert document formatting that turns heads, boosts credibility, and grows your business in Accra (New Bortianor & Tudu), Kasoa, Jei-Krodua, and beyond.
               </p>
 
-              {/* Quick Service Highlights Strip (No Prices on Home Page) */}
+              {/* Quick Service Highlights Strip — Direct Order Triggers */}
               <div
                 className={`flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium ${
                   isDark ? 'text-slate-300' : 'text-slate-700'
@@ -89,7 +100,18 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 <button
                   type="button"
-                  onClick={() => onSelectServiceForQuote('flyer')}
+                  onClick={() =>
+                    onDirectOrderToContact({
+                      serviceName: 'Graphic Designing',
+                      packageTitle: 'Flyers, Banners, Posters & Stickers Package',
+                      deliverables: [
+                        '300 DPI CMYK Print-Ready Artwork (PDF, PNG, PSD/AI)',
+                        'Social Media Promotional Formats (Instagram, WhatsApp Status, Facebook)',
+                        '24–48 Hour Fast Studio Turnaround & Revisions',
+                      ],
+                      turnaroundLabel: 'Express Priority (24–48 Hours)',
+                    })
+                  }
                   className="hover:text-amber-500 transition-colors cursor-pointer"
                 >
                   Flyers, Banners & Stickers
@@ -97,7 +119,18 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <span aria-hidden="true">·</span>
                 <button
                   type="button"
-                  onClick={() => onSelectServiceForQuote('document')}
+                  onClick={() =>
+                    onDirectOrderToContact({
+                      serviceName: 'Editing & Formatting Document',
+                      packageTitle: 'MS Word Thesis, Report & Corporate Proposal Formatting',
+                      deliverables: [
+                        'Automated Dynamic Table of Contents & List of Figures/Tables',
+                        'Consistent Heading Styles, Page Numbering (Roman & Arabic) & Margins',
+                        'Clean Editable DOCX + Print-Ready PDF/A Handover',
+                      ],
+                      turnaroundLabel: 'Standard Turnaround (3–5 Days)',
+                    })
+                  }
                   className="hover:text-amber-500 transition-colors cursor-pointer"
                 >
                   MS Word Documentation
@@ -105,7 +138,18 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <span aria-hidden="true">·</span>
                 <button
                   type="button"
-                  onClick={() => onSelectServiceForQuote('excel')}
+                  onClick={() =>
+                    onDirectOrderToContact({
+                      serviceName: 'Excel Database & Dashboard',
+                      packageTitle: 'MS Excel Automated Database & Executive KPI Dashboard',
+                      deliverables: [
+                        'Structured Data Entry Tables with Drop-Down Validation',
+                        'Automated Formulas (XLOOKUP, SUMIFS) & Dynamic KPI Charts',
+                        'Print-Ready Executive Summary Views & Unlocked Master XLSX',
+                      ],
+                      turnaroundLabel: 'Standard Turnaround (3–5 Days)',
+                    })
+                  }
                   className="hover:text-amber-500 transition-colors cursor-pointer"
                 >
                   Excel Databases & Dashboards
@@ -113,24 +157,62 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <span aria-hidden="true">·</span>
                 <button
                   type="button"
-                  onClick={() => onSelectServiceForQuote('branding')}
+                  onClick={() =>
+                    onDirectOrderToContact({
+                      serviceName: 'Full Branding Package',
+                      packageTitle: 'Full Corporate Brand Identity & Executive Stationery Suite',
+                      deliverables: [
+                        'Primary & Secondary Vector Logo Marks (AI, EPS, SVG, PNG)',
+                        'Call & Business Cards, Official Letterhead & Envelope Templates',
+                        'Brand Color Palette, Typography Guide & Mockup Presentation',
+                      ],
+                      turnaroundLabel: 'Standard Turnaround (3–5 Days)',
+                    })
+                  }
                   className="hover:text-amber-500 transition-colors cursor-pointer"
                 >
                   Full Corporate Branding
                 </button>
               </div>
 
-              {/* Dual Call-to-Action (CTA) Buttons */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+              {/* Primary CTA Buttons (Direct Order via Contact + Calculator + WhatsApp) */}
+              <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3.5 pt-2">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="button"
-                  onClick={() => onNavigate('calculator')}
+                  onClick={() =>
+                    onDirectOrderToContact({
+                      serviceName: 'Graphic Designing',
+                      packageTitle: 'Custom Studio Design or Document Formatting Order',
+                      deliverables: [
+                        'Dedicated 1-on-1 Creative & Technical Brief Review',
+                        'High-Resolution Proofs Delivered via WhatsApp / Email',
+                        'Master Print-Ready & Editable Source Files Included',
+                      ],
+                      turnaroundLabel: 'Express Priority (24–48 Hours)',
+                    })
+                  }
                   className="py-4 px-7 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm sm:text-base transition-colors flex items-center justify-center gap-2.5 whitespace-nowrap shadow-lg shadow-amber-500/15 cursor-pointer"
                 >
-                  <span>Get Instant Quote & Order</span>
+                  <ShoppingBag className="w-4 h-4 shrink-0" />
+                  <span>Place an Order via Contact</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={() => onNavigate('services')}
+                  className={`py-4 px-6 rounded-xl border font-bold text-sm sm:text-base transition-colors flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer ${
+                    isDark
+                      ? 'bg-slate-900/90 border-slate-700 hover:border-amber-500/60 text-white'
+                      : 'bg-white border-slate-300 hover:border-amber-500 text-slate-900'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span>See What You Get & Order</span>
                 </motion.button>
 
                 <motion.a
@@ -139,14 +221,14 @@ export const HomePage: React.FC<HomePageProps> = ({
                   href={heroWhatsAppUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`py-4 px-6 rounded-xl border font-bold text-sm sm:text-base transition-colors flex items-center justify-center gap-2.5 whitespace-nowrap ${
+                  className={`py-4 px-5 rounded-xl border font-bold text-sm sm:text-base transition-colors flex items-center justify-center gap-2 whitespace-nowrap ${
                     isDark
                       ? 'bg-slate-900/90 border-slate-700 hover:border-emerald-500/60 hover:bg-slate-900 text-white'
                       : 'bg-white border-slate-300 hover:border-emerald-600 text-slate-900'
                   }`}
                 >
                   <MessageSquare className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>Chat on WhatsApp</span>
+                  <span>WhatsApp</span>
                 </motion.a>
               </div>
 
@@ -291,7 +373,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 3. CORE STUDIO CAPABILITIES OVERVIEW (Links to Dedicated Services Page) */}
+      {/* 3. CORE STUDIO CAPABILITIES OVERVIEW — WHAT YOU GET & DIRECT ORDER */}
       <section
         className={`py-16 sm:py-20 border-t transition-colors ${
           isDark
@@ -303,13 +385,13 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
               <p className="text-xs font-semibold tracking-wider text-amber-500 mb-2">
-                02. Core Studio Divisions
+                02. Core Studio Divisions — Know Exactly What You Are Getting
               </p>
               <h2
                 className="text-2xl sm:text-3xl font-bold tracking-tight"
                 style={{ textWrap: 'balance' }}
               >
-                Explore Our Two Specialized Service Pillars
+                Explore Deliverables & Place Your Order Directly
               </h2>
             </div>
             <button
@@ -343,29 +425,41 @@ export const HomePage: React.FC<HomePageProps> = ({
                   Eye-Catching Visuals, Print & Event Souvenirs
                 </h3>
                 <p
-                  className={`text-sm leading-relaxed mb-6 ${
+                  className={`text-sm leading-relaxed mb-4 ${
                     isDark ? 'text-slate-300' : 'text-slate-600'
                   }`}
                 >
                   Stickers, banners, posters, flyers, call & business cards, letterheads, embossed certificates, t-shirts/souvenirs, wedding/gala invitations, music cover arts, and full brand identity packages.
                 </p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs mb-6">
-                  {[
-                    'Promotional Flyers & Posters',
-                    'Stickers & Roll-Up Banners',
-                    'T-Shirts & Event Souvenirs',
-                    'Call Cards & Letterheads',
-                    'Certificates & Invitations',
-                    'Full Corporate Brand Identity',
-                  ].map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+
+                <div
+                  className={`p-4 rounded-xl border mb-6 ${
+                    isDark
+                      ? 'bg-slate-950/60 border-slate-800'
+                      : 'bg-slate-50 border-slate-200'
+                  }`}
+                >
+                  <div className="text-[11px] font-mono-tabular font-semibold text-amber-500 uppercase mb-2.5">
+                    What You Get In Your Handover Package:
+                  </div>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                    {[
+                      '300 DPI CMYK Print-Ready Files',
+                      'Editable Source Files (PSD / AI / PDF)',
+                      'Web & WhatsApp Promo Versions',
+                      'Custom Brand Color & Font Guide',
+                      'Realistic 3D Product Mockups',
+                      'Fast Revisions Until 100% Satisfied',
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <div className="pt-4 border-t border-slate-800/40 flex items-center justify-between gap-4">
+              <div className="pt-4 border-t border-slate-800/40 flex flex-wrap items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => onNavigate('services')}
@@ -373,13 +467,38 @@ export const HomePage: React.FC<HomePageProps> = ({
                 >
                   Inspect All Visual Services →
                 </button>
-                <button
-                  type="button"
-                  onClick={() => onSelectServiceForQuote('flyer')}
-                  className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors cursor-pointer"
-                >
-                  Get Custom Quote
-                </button>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => onSelectServiceForQuote('flyer')}
+                    className={`px-3.5 py-2 rounded-lg border font-semibold text-xs transition-colors cursor-pointer ${
+                      isDark
+                        ? 'border-slate-700 hover:bg-slate-800 text-slate-200'
+                        : 'border-slate-300 hover:bg-slate-100 text-slate-800'
+                    }`}
+                  >
+                    Configure Scope
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onDirectOrderToContact({
+                        serviceName: 'Graphic Designing',
+                        packageTitle: 'Brand & Visual Design Package (Flyers, Banners, Logos & Print)',
+                        deliverables: [
+                          '300 DPI CMYK Print-Ready Artwork (PDF, PNG)',
+                          'Editable Master Source Files (PSD / AI / EPS)',
+                          'Social Media & WhatsApp Optimized Promotional Formats',
+                        ],
+                        turnaroundLabel: 'Express Priority (24–48 Hours)',
+                      })
+                    }
+                    className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                    <span>Order This Service → Contact</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
 
@@ -403,29 +522,41 @@ export const HomePage: React.FC<HomePageProps> = ({
                   Flawless MS Word Documentation & Excel Databases
                 </h3>
                 <p
-                  className={`text-sm leading-relaxed mb-6 ${
+                  className={`text-sm leading-relaxed mb-4 ${
                     isDark ? 'text-slate-300' : 'text-slate-600'
                   }`}
                 >
                   Advanced MS Word formatting for academic theses, corporate reports, and grant proposals alongside automated MS Excel databases, financial KPI dashboards, and boardroom PowerPoint decks.
                 </p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs mb-6">
-                  {[
-                    'MS Word Thesis & Report Formatting',
-                    'Automated Dynamic TOC & Styles',
-                    'Automated Excel Databases',
-                    'Executive KPI Dashboards',
-                    'Investor PowerPoint Decks',
-                    'Corporate Proposals & BoQs',
-                  ].map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+
+                <div
+                  className={`p-4 rounded-xl border mb-6 ${
+                    isDark
+                      ? 'bg-slate-950/60 border-slate-800'
+                      : 'bg-slate-50 border-slate-200'
+                  }`}
+                >
+                  <div className="text-[11px] font-mono-tabular font-semibold text-amber-500 uppercase mb-2.5">
+                    What You Get In Your Handover Package:
+                  </div>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                    {[
+                      'Automated Dynamic Table of Contents',
+                      'Roman & Arabic Section Page Numbering',
+                      'APA / Harvard / Corporate Style Sheets',
+                      'Automated Excel Formulas & Dashboards',
+                      'Executive Slide Master PowerPoint Decks',
+                      'Editable DOCX / XLSX + Locked PDF/A',
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <div className="pt-4 border-t border-slate-800/40 flex items-center justify-between gap-4">
+              <div className="pt-4 border-t border-slate-800/40 flex flex-wrap items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => onNavigate('services')}
@@ -433,13 +564,38 @@ export const HomePage: React.FC<HomePageProps> = ({
                 >
                   Inspect Document Services →
                 </button>
-                <button
-                  type="button"
-                  onClick={() => onSelectServiceForQuote('document')}
-                  className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors cursor-pointer"
-                >
-                  Get Custom Quote
-                </button>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => onSelectServiceForQuote('document')}
+                    className={`px-3.5 py-2 rounded-lg border font-semibold text-xs transition-colors cursor-pointer ${
+                      isDark
+                        ? 'border-slate-700 hover:bg-slate-800 text-slate-200'
+                        : 'border-slate-300 hover:bg-slate-100 text-slate-800'
+                    }`}
+                  >
+                    Configure Scope
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onDirectOrderToContact({
+                        serviceName: 'Editing & Formatting Document',
+                        packageTitle: 'Executive MS Word Formatting & Excel Database Administration',
+                        deliverables: [
+                          'Automated Table of Contents, List of Figures & Tables',
+                          'Strict Academic or Corporate Typography & Margin Compliance',
+                          'Clean Editable DOCX / XLSX Master + Print-Ready PDF',
+                        ],
+                        turnaroundLabel: 'Standard Turnaround (3–5 Days)',
+                      })
+                    }
+                    className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                    <span>Order This Service → Contact</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
